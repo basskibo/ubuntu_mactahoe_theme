@@ -1,0 +1,29 @@
+/* local overrides: flat macOS-style toolbar controls instead of the glass rim shadows */
+headerbar button,
+headerbar menubutton.flat > button:not(.flat) {
+  background-image: none;
+  background-color: transparent;
+  box-shadow: none;
+}
+headerbar button:hover,
+headerbar menubutton.flat > button:hover:not(.flat) {
+  background-color: alpha(#ffffff, 0.10);
+  box-shadow: none;
+}
+headerbar button:active,
+headerbar button:checked,
+headerbar menubutton.flat > button:active:not(.flat) {
+  background-color: alpha(#ffffff, 0.16);
+  box-shadow: none;
+}
+#NautilusPathBar, .nautilus-pathbar {
+  background-image: none;
+  background-color: alpha(#ffffff, 0.07);
+  box-shadow: none;
+}
+#NautilusPathBar button:not(:hover):not(:active), .nautilus-pathbar button:not(:hover):not(:active) {
+  background-color: transparent;
+}
+headerbar entry, headerbar entry:focus {
+  box-shadow: none;
+}
