@@ -1,0 +1,79 @@
+/* local override: menus have no blur behind them, so give them a solid frosted-dark surface */
+.quick-settings {
+  background-color: rgba(32, 32, 34, 0.94) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45) !important;
+}
+/* soft glow rims render as blurry white outlines; use flat fills like macOS Control Center */
+.quick-toggle, .quick-menu-toggle, .quick-slider,
+.quick-settings-system-item .icon-button, .quick-settings .icon-button {
+  box-shadow: none !important;
+}
+.quick-toggle:not(:checked), .quick-slider, .quick-settings-system-item .icon-button {
+  background-color: rgba(255, 255, 255, 0.09) !important;
+}
+.quick-toggle:hover:not(:checked), .quick-settings-system-item .icon-button:hover {
+  background-color: rgba(255, 255, 255, 0.14) !important;
+}
+
+/* lock screen: large bold clock like macOS Tahoe */
+.unlock-dialog-clock {
+  spacing: 6px;
+  padding-bottom: 2em;
+}
+.unlock-dialog-clock-time {
+  font-size: 96pt;
+  font-weight: 700;
+  padding-top: 24px;
+  color: rgba(255, 255, 255, 0.92);
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.25);
+}
+.unlock-dialog-clock-date {
+  font-size: 17pt;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
+}
+.unlock-dialog-clock-hint {
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* compact Control Center: macOS tiles are much smaller than the theme defaults */
+.quick-settings {
+  padding: 14px !important;
+  padding-top: 6px !important;
+  border-radius: 26px !important;
+}
+.quick-settings-grid {
+  spacing-rows: 8px;
+  spacing-columns: 8px;
+}
+.quick-toggle, .quick-menu-toggle {
+  min-width: 10.5em;
+  max-width: 10.5em;
+  min-height: 2.6em;
+}
+.quick-toggle {
+  padding: 8px !important;
+}
+.quick-toggle:ltr > StBoxLayout {
+  padding-left: 14px;
+}
+.quick-menu-toggle .quick-toggle {
+  padding: 5px 0 !important;
+}
+.quick-menu-toggle .quick-toggle .quick-toggle-icon {
+  min-height: 2.4em !important;
+  min-width: 2.4em !important;
+}
+.quick-menu-toggle .quick-toggle-arrow {
+  min-width: 1.9em;
+  min-height: 1.9em;
+}
+.quick-toggle-title {
+  font-size: 10pt;
+}
+.quick-toggle-subtitle {
+  font-size: 9pt;
+}
