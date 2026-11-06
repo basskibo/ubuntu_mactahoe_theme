@@ -86,7 +86,7 @@ Edit a file and re-run `install.sh`. Don't edit the files in `~/.themes` directl
 
 ## Known limitations
 
-- On GNOME 50, switching the shell theme while logged in can fail with "Argument file may not be null" in the journal, so the new shell theme only shows after logging out and back in.
+- On GNOME 50 a live shell theme reload fails ("Argument file may not be null" in the journal) and leaves the shell half-themed, e.g. orange toggles with the arrow sticking out. Shell CSS changes only show after a real log out and back in (locking the screen is not enough). Don't toggle User Themes off and on to reload, that puts the extension in an error state until the next login.
 
 - Apple's font (SF Pro) may only be used on Apple devices, so Inter stands in for it.
 - When Ubuntu updates the `yaru-theme-gnome-shell` package, the login screen goes back to the Ubuntu look. Re-run `gdm.sh`.

@@ -54,8 +54,9 @@ gsettings set org.gnome.desktop.interface font-antialiasing 'grayscale'
 gsettings set org.gnome.desktop.wm.preferences titlebar-font 'Inter Variable Semi-Bold 11'
 gsettings set org.gnome.desktop.wm.preferences button-layout 'close,minimize,maximize:appmenu'
 
-# Shell theme needs the user-themes extension; switching away and back forces a reload
-gsettings set org.gnome.shell.extensions.user-theme name ''
+# Shell theme needs the user-themes extension. No switching away and back to force a reload:
+# on GNOME 50 every live theme reload fails ("Argument file may not be null") and leaves the
+# shell half-themed, so the new shell CSS only applies at the next login
 gsettings set org.gnome.shell.extensions.user-theme name 'MacTahoe-Dark'
 
 # Extensions from extensions.gnome.org. GNOME shows a confirmation dialog, then downloads
