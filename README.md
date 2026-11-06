@@ -1,8 +1,8 @@
 # MacTahoe setup
 
-A macOS Tahoe look for Ubuntu (GNOME 46, Wayland) in one command.
+A macOS Tahoe look for Ubuntu 26.04 (GNOME 50, Wayland) in one command.
 
-It uses the existing [MacTahoe](https://github.com/vinceliuice/MacTahoe-gtk-theme) theme by vinceliuice, adds our own tweaks on top, and installs [Dynamic Island](https://extensions.gnome.org/extension/11268/dynamic-island/).
+It uses the existing [MacTahoe](https://github.com/vinceliuice/MacTahoe-gtk-theme) theme by vinceliuice, adds our own tweaks on top, and installs [Blur my Shell](https://extensions.gnome.org/extension/3193/blur-my-shell/) and [Dynamic Island](https://extensions.gnome.org/extension/11268/dynamic-island/).
 
 ## What gets installed
 
@@ -30,7 +30,6 @@ sudo apt install git sassc libglib2.0-dev-bin libxml2-utils gnome-shell-extensio
 Then install:
 
 - the **User Themes** extension (ships with `gnome-shell-extensions`) and enable it in the Extensions app,
-- the **[Blur my Shell](https://extensions.gnome.org/extension/3193/blur-my-shell/)** extension,
 - the **[Inter](https://rsms.me/inter/)** font (put `InterVariable.ttf` in `~/.local/share/fonts/`).
 
 ### 2. Get this folder
@@ -43,7 +42,7 @@ Clone or copy the whole `mactahoe-setup` folder (not just the script), e.g. into
 ~/xProjects/mactahoe-setup/install.sh
 ```
 
-Confirm the "Install Dynamic Island?" dialog when it appears. Close Firefox first if you want its theme too.
+Confirm the "Install Blur my Shell?" and "Install Dynamic Island?" dialogs when they appear. Close Firefox first if you want its theme too.
 
 ### 4. Login screen (optional)
 
@@ -81,11 +80,13 @@ gsettings reset org.gnome.desktop.wm.preferences button-layout
 Our tweaks live in two files that get appended to the theme files on every install:
 
 - `gtk4-overrides.css`: Files and other GTK4 apps (flat toolbar buttons, no white rims)
-- `shell-overrides.css`: top bar, quick settings, lock screen
+- `shell-overrides.css`: top bar, quick settings, lock screen. It targets the GNOME 48+ quick settings layout (`.quick-toggle-has-menu`); on GNOME 46/47 the toggles with an arrow would look wrong
 
 Edit a file and re-run `install.sh`. Don't edit the files in `~/.themes` directly, every reinstall overwrites them.
 
 ## Known limitations
+
+- On GNOME 50, switching the shell theme while logged in can fail with "Argument file may not be null" in the journal, so the new shell theme only shows after logging out and back in.
 
 - Apple's font (SF Pro) may only be used on Apple devices, so Inter stands in for it.
 - When Ubuntu updates the `yaru-theme-gnome-shell` package, the login screen goes back to the Ubuntu look. Re-run `gdm.sh`.

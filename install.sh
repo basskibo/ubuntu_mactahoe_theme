@@ -58,40 +58,48 @@ gsettings set org.gnome.desktop.wm.preferences button-layout 'close,minimize,max
 gsettings set org.gnome.shell.extensions.user-theme name ''
 gsettings set org.gnome.shell.extensions.user-theme name 'MacTahoe-Dark'
 
+# Extensions from extensions.gnome.org. GNOME shows a confirmation dialog, then downloads
+# a version matching this GNOME release and enables it without a re-login
+install_ext() {  # uuid, name, page
+    if gnome-extensions info "$1" > /dev/null 2>&1; then
+        gnome-extensions enable "$1"
+        return
+    fi
+    echo "Confirm the $2 install in the dialog that opens..."
+    result=$(gdbus call --session --timeout 300 --dest org.gnome.Shell.Extensions --object-path /org/gnome/Shell/Extensions \
+        --method org.gnome.Shell.Extensions.InstallRemoteExtension "$1" 2>&1 || true)
+    case "$result" in
+        *successful*) echo "$2 installed." ;;
+        *) echo "$2 was not installed ($result). Get it at $3" ;;
+    esac
+}
+install_ext blur-my-shell@aunetx "Blur my Shell" https://extensions.gnome.org/extension/3193/blur-my-shell/
+# Our Dynamic Island extension
+install_ext dynamic-island@bjagetic "Dynamic Island" https://extensions.gnome.org/extension/11268/dynamic-island/
+
 BMS="$HOME/.local/share/gnome-shell/extensions/blur-my-shell@aunetx/schemas"
 if [ -d "$BMS" ]; then
-    bms() { gsettings --schemadir "$BMS" set "org.gnome.shell.extensions.blur-my-shell.$1" "$2" "$3"; }
-    bms dash-to-dock brightness 0.9
+    bms() { gsettings --schemadir "$BMS" set "org.gnome.shell.extensions.blur-my-shell${1:+.$1}" "$2" "$3"; }
+    # Blur strength and brightness now live in named "pipelines"; add ours next to the user's own
+    pipe() { echo "'pipeline_tahoe_$1': {'name': <'Tahoe $1'>, 'effects': <[<{'type': <'dual_kawase_blur'>, 'id': <'effect_tahoe_$1'>, 'params': <{'unscaled_radius': <$2>, 'brightness': <$3>}>}>]>}"; }
+    pipelines=$(gsettings --schemadir "$BMS" get org.gnome.shell.extensions.blur-my-shell pipelines | sed -E "s/, 'pipeline_tahoe_[a-z]+': \{'name': <'Tahoe [a-z]+'>, 'effects': <\[<\{[^]]*\]>\}//g")
+    bms "" pipelines "${pipelines%\}}, $(pipe dock 30 0.9), $(pipe lockscreen 4 0.85), $(pipe apps 30 0.7)}"
+    bms dash-to-dock pipeline pipeline_tahoe_dock
     # Tahoe's lock screen shows the wallpaper almost sharp, just dimmed enough for the clock
-    bms lockscreen sigma 4
-    bms lockscreen brightness 0.85
+    bms lockscreen pipeline pipeline_tahoe_lockscreen
     # Blur behind translucent parts (sidebars) of these apps only; opacity 255 keeps the rest of the window solid
     bms applications whitelist "['org.gnome.Nautilus', 'org.gnome.Settings', 'org.gnome.TextEditor', 'org.gnome.Extensions', 'org.gnome.Calculator', 'org.gnome.Software']"
+    bms applications pipeline pipeline_tahoe_apps
     bms applications opacity 255
     bms applications dynamic-opacity false
-    bms applications brightness 0.7
     bms applications enable-all false
     bms applications blur true
 else
     echo "blur-my-shell not found, skipping blur settings"
 fi
 
-# Our Dynamic Island extension from extensions.gnome.org. GNOME shows a confirmation dialog,
-# then downloads a version matching this GNOME release and enables it without a re-login
-ISLAND=dynamic-island@bjagetic
-if gnome-extensions info "$ISLAND" > /dev/null 2>&1; then
-    gnome-extensions enable "$ISLAND"
-else
-    echo "Confirm the Dynamic Island install in the dialog that opens..."
-    result=$(gdbus call --session --timeout 300 --dest org.gnome.Shell.Extensions --object-path /org/gnome/Shell/Extensions \
-        --method org.gnome.Shell.Extensions.InstallRemoteExtension "$ISLAND" 2>&1 || true)
-    case "$result" in
-        *successful*) echo "Dynamic Island installed." ;;
-        *) echo "Dynamic Island was not installed ($result). Get it at https://extensions.gnome.org/extension/11268/dynamic-island/" ;;
-    esac
-fi
-
-if ! fc-list : family | grep -q "Inter Variable"; then
+# Not "fc-list | grep -q": with pipefail, grep quitting early makes fc-list fail and the check lie
+if [ -z "$(fc-list 'Inter Variable' family)" ]; then
     echo "Note: the 'Inter Variable' font is not installed, get it from https://rsms.me/inter/"
 fi
 

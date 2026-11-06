@@ -1,19 +1,64 @@
-/* local override: menus have no blur behind them, so give them a solid frosted-dark surface */
+/* local overrides for GNOME Shell 50 (Ubuntu 26.04).
+   Since GNOME 48 a toggle with a menu is a .quick-toggle-has-menu container holding the
+   .quick-toggle, a .quick-toggle-separator and a .quick-toggle-menu-button (the arrow);
+   the old .quick-menu-toggle / .quick-toggle-arrow classes are gone. */
+
+/* menus have no blur behind them, so give them a solid frosted-dark surface */
 .quick-settings {
   background-color: rgba(32, 32, 34, 0.94) !important;
   border: 1px solid rgba(255, 255, 255, 0.07) !important;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45) !important;
 }
+
 /* soft glow rims render as blurry white outlines; use flat fills like macOS Control Center */
-.quick-toggle, .quick-menu-toggle, .quick-slider,
+.quick-toggle, .quick-toggle-has-menu, .quick-slider,
 .quick-settings-system-item .icon-button, .quick-settings .icon-button {
   box-shadow: none !important;
 }
-.quick-toggle:not(:checked), .quick-slider, .quick-settings-system-item .icon-button {
+.quick-toggle:not(:checked), .quick-toggle-has-menu, .quick-slider,
+.quick-settings-system-item .icon-button {
   background-color: rgba(255, 255, 255, 0.09) !important;
 }
 .quick-toggle:hover:not(:checked), .quick-settings-system-item .icon-button:hover {
   background-color: rgba(255, 255, 255, 0.14) !important;
+}
+/* the container draws the pill; the toggle inside it stays transparent in every state
+   (otherwise it paints its own pill over the container and the arrow sticks out) */
+.quick-toggle-has-menu .quick-toggle,
+.quick-toggle-has-menu .quick-toggle:hover,
+.quick-toggle-has-menu .quick-toggle:active,
+.quick-toggle-has-menu .quick-toggle:checked {
+  background: none !important;
+  box-shadow: none !important;
+}
+/* Tahoe shows "on" on the icon circle of a menu toggle, the pill only gets a bit lighter */
+.quick-toggle-has-menu:checked {
+  background-color: rgba(255, 255, 255, 0.14) !important;
+}
+.quick-toggle-has-menu .quick-toggle .quick-toggle-icon {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+.quick-toggle-has-menu .quick-toggle:hover .quick-toggle-icon {
+  background-color: rgba(255, 255, 255, 0.18);
+}
+.quick-toggle-has-menu .quick-toggle:checked .quick-toggle-icon {
+  background-color: -st-accent-color;
+  color: #ffffff;
+}
+.quick-toggle-has-menu .quick-toggle-separator {
+  width: 0;
+  background: none;
+}
+.quick-toggle-has-menu .quick-toggle-menu-button,
+.quick-toggle-has-menu .quick-toggle-menu-button:checked {
+  background-color: transparent;
+  color: #ffffff;
+}
+.quick-toggle-has-menu .quick-toggle-menu-button:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+.quick-toggle-has-menu .quick-toggle-menu-button:active {
+  background-color: rgba(255, 255, 255, 0.18);
 }
 
 /* lock screen: large bold clock like macOS Tahoe */
@@ -49,7 +94,7 @@
   spacing-rows: 8px;
   spacing-columns: 8px;
 }
-.quick-toggle, .quick-menu-toggle {
+.quick-toggle, .quick-toggle-has-menu {
   min-width: 10.5em;
   max-width: 10.5em;
   min-height: 2.6em;
@@ -60,16 +105,34 @@
 .quick-toggle:ltr > StBoxLayout {
   padding-left: 14px;
 }
-.quick-menu-toggle .quick-toggle {
+/* the toggle inside a menu container shares its width with the arrow: no fixed width here */
+.quick-toggle-has-menu .quick-toggle {
+  min-width: 0;
+  max-width: 10000px;
   padding: 5px 0 !important;
 }
-.quick-menu-toggle .quick-toggle .quick-toggle-icon {
+.quick-toggle-has-menu .quick-toggle:ltr > StBoxLayout {
+  padding-left: 5px;
+  padding-right: 2px;
+}
+.quick-toggle-has-menu .quick-toggle:rtl > StBoxLayout {
+  padding-left: 2px;
+  padding-right: 5px;
+}
+.quick-toggle-has-menu .quick-toggle .quick-toggle-icon {
   min-height: 2.4em !important;
   min-width: 2.4em !important;
 }
-.quick-menu-toggle .quick-toggle-arrow {
+.quick-toggle-has-menu .quick-toggle-menu-button {
   min-width: 1.9em;
   min-height: 1.9em;
+  margin: 6px;
+}
+.quick-toggle-has-menu .quick-toggle-menu-button:ltr {
+  margin-left: 0;
+}
+.quick-toggle-has-menu .quick-toggle-menu-button:rtl {
+  margin-right: 0;
 }
 .quick-toggle-title {
   font-size: 10pt;
